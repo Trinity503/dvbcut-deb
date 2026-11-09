@@ -35,6 +35,39 @@ for ac_dir; do
   esac
 done
 
+AC_ARG_WITH([mad-prefix],
+  [AS_HELP_STRING([--with-mad-prefix=PREFIX],
+                  [prefix where libmad is installed])],
+  [mad_prefix="$withval"],
+  [mad_prefix=""])
+
+AS_IF([test -n "$mad_prefix"], [
+  CPPFLAGS="$CPPFLAGS -I$mad_prefix/include"
+  LDFLAGS="$LDFLAGS -L$mad_prefix/lib"
+])
+
+AC_ARG_WITH([a52-prefix],
+  [AS_HELP_STRING([--with-a52-prefix=PREFIX],
+                  [prefix where liba52 is installed])],
+  [a52_prefix="$withval"],
+  [a52_prefix=""])
+
+AS_IF([test -n "$a52_prefix"], [
+  CPPFLAGS="$CPPFLAGS -I$a52_prefix/include"
+  LDFLAGS="$LDFLAGS -L$a52_prefix/lib"
+])
+
+AC_ARG_WITH([ffmpeg-prefix],
+  [AS_HELP_STRING([--with-ffmpeg-prefix=PREFIX],
+                  [prefix where FFmpeg is installed])],
+  [ffmpeg_prefix="$withval"],
+  [ffmpeg_prefix=""])
+
+AS_IF([test -n "$ffmpeg_prefix"], [
+  CPPFLAGS="-I$ffmpeg_prefix/include $CPPFLAGS"
+  LDFLAGS="-L$ffmpeg_prefix/lib $LDFLAGS"
+])
+
 dnl Checks for libraries.
 
 FFMPEG_LIBS='-lavformat -lavcodec -lavutil'
