@@ -95,7 +95,7 @@ lavfmuxer::lavfmuxer(const char *format, uint32_t audiostreammask, mpgfile &mpg,
 
             av_packet_free(&pkt);
             av_frame_free(&frame);
-	    avcodec_close(codec);
+	    avcodec_free_context(&codec);
 	  }
 	  break;
 	}

@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: Bernhard Übelacker <bernhardu@mailbox.org>
 Build-Depends:
- debhelper-compat (= 12),
+ debhelper-compat (= 13),
  liba52-0.7.4-dev,
  libao-dev,
  libavcodec-dev (>> 6:11~),
@@ -11,7 +11,7 @@ Build-Depends:
  libavutil-dev (>> 6:11~),
  libmad0-dev,
  libswscale-dev (>> 6:11~),
- pkg-config,
+ pkgconf,
  qt5-qmake,
  qtbase5-dev,
  qtbase5-dev-tools,
@@ -19,7 +19,7 @@ Build-Depends:
 Vcs-Git: https://github.com/bernhardu/dvbcut-deb.git
 Vcs-Browser: https://github.com/bernhardu/dvbcut-deb
 Homepage: https://github.com/bernhardu/dvbcut-deb
-Standards-Version: 4.1.4
+Standards-Version: 4.7.4
 
 Package: dvbcut
 Architecture: any

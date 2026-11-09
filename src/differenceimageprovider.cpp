@@ -65,22 +65,33 @@ void differenceimageprovider::decodepicture(int picture, bool decodeallgop)
     if (im.size()!=baseimg.size())
       im=im.scaled(baseimg.size());
 
-    if (im.depth()==32 && baseimg.depth()==32)
-      for (int y=0;y<baseimg.height();++y) {
-        QRgb *imd=(QRgb*)im.scanLine(y);
-        QRgb *bimd=(QRgb*)baseimg.scanLine(y);
+    if (im.format() == QImage::Format_RGB888 &&
+        baseimg.format() == QImage::Format_RGB888)
+    {
+      int bytes_per_pixel = baseimg.depth()/8;
+      int bytes_per_line = baseimg.bytesPerLine();
 
-        for (int x=im.width();x>0;--x) {
-          int dist=square(qRed(*imd)-qRed(*bimd))+square(qGreen(*imd)-qGreen(*bimd))+square(qBlue(*imd)-qBlue(*bimd));
+      uchar* im_bits = im.bits();
+      const uchar* baseimg_bits = baseimg.constBits();
+
+      for (int y = 0; y < baseimg.height(); y++) {
+        for (int x = 0; x < baseimg.width(); x++) {
+          QRgb *imd = (QRgb*)(im_bits + x*bytes_per_pixel + y*bytes_per_line);
+          const QRgb *bimd = (const QRgb*)(baseimg_bits + x*bytes_per_pixel + y*bytes_per_line);
+
+          int dist = square(qRed(*imd)-qRed(*bimd)) +
+                     square(qGreen(*imd)-qGreen(*bimd)) +
+                     square(qBlue(*imd)-qBlue(*bimd));
           if (dist>1000)
             dist=1000;
 
-          *imd=mixcolors(*imd,((x/16+y/16)&1) ? qRgb(64,64,64):qRgb(192,192,192) ,1000-dist,1000);
-
-          ++imd;
-          ++bimd;
-          }
+          QRgb new_pixel = mixcolors(*imd, ((x/16+y/16)&1) ? qRgb(64,64,64) : qRgb(192,192,192), 1000-dist, 1000);
+          memcpy(imd, &new_pixel, 3);
         }
+      }
+    } else {
+      fprintf(stderr, "%s: wrong format.\n", __FUNCTION__);
+    }
 
 
     if ((RTTI!=IMAGEPROVIDER_DIFFERENCE_UNSCALED && displaywidth!=im.width())||(viewscalefactor!=1.0))
